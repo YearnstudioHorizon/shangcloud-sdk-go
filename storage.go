@@ -1,4 +1,4 @@
-package shangcloudsdkgo
+package shangcloud
 
 import (
 	"fmt"

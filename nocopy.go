@@ -1,4 +1,4 @@
-package shangcloudsdkgo
+package shangcloud
 
 type noCopy struct{}
 
