@@ -15,6 +15,7 @@ type TempVarStorage interface {
 // 由sync.Map实现的线程安全的内存KV存储
 type ramKv struct {
 	storage *sync.Map
+	noCopy
 }
 
 func newRamKv() *ramKv {
