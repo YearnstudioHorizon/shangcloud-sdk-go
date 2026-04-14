@@ -1,6 +1,7 @@
 package shangcloud
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/url"
 )
@@ -47,6 +48,13 @@ func (c *Client) GenerateOAuthUrl() string {
 	return url
 }
 
+// 更换ClientSecret
 func (c *Client) SetClientSecret(clientSecret string) {
 	c.clientSecret = clientSecret
+}
+
+// 基于ClientId及ClientSecret生成Authorization头
+func (c *Client) generateAuthorizeHeader() string {
+	raw := fmt.Sprintf("%v:%v", c.ClientId, c.clientSecret)
+	return base64.StdEncoding.EncodeToString([]byte(raw))
 }
