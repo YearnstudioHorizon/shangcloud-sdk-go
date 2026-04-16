@@ -5,9 +5,9 @@ import (
 )
 
 type User interface {
-	InitUser(string, string, int, *Client) // 在实例化后会被立即调用
-	Save()                                 // 在数据变更后会被调用
-	IsExpired() bool                       // 检查 Token 是否过期
+	InitUser(string, string, string, int, *Client) // 在实例化后会被立即调用
+	Save()                                         // 在数据变更后会被调用
+	IsExpired() bool                               // 检查 Token 是否过期
 }
 
 type UserInstance struct {
@@ -16,13 +16,14 @@ type UserInstance struct {
 	ExpiresIn    int       `json:"expires_in"`  // 原始有效时长（秒）
 	ExpiryTime   time.Time `json:"expiry_time"` // 具体的过期时刻
 	client       *Client   `json:"-"`
+	TokenType    string    `json:"token_type"`
 	noCopy                 // 禁止拷贝
 }
 
 // 由于是内存存储, 不需要具体实现
 func (user *UserInstance) Save() {}
 
-func (user *UserInstance) InitUser(accessToken string, refreshToken string, expiresIn int, client *Client) {
+func (user *UserInstance) InitUser(accessToken string, refreshToken string, tokenType string, expiresIn int, client *Client) {
 	user.accessToken = accessToken
 	user.refreshToken = refreshToken
 	user.ExpiresIn = expiresIn
@@ -38,6 +39,11 @@ func (user *UserInstance) InitUser(accessToken string, refreshToken string, expi
 func (user *UserInstance) IsExpired() bool {
 	// 提前60秒
 	return time.Now().Add(60 * time.Second).After(user.ExpiryTime)
+}
+
+// 获取基础信息
+func (user *UserInstance) GetBasicInfo() (UserBasicInfo, error) {
+	return user.client.getUserBasicInfo(user.accessToken, user.TokenType)
 }
 
 var _ User = &UserInstance{} // 测试接口是否实现

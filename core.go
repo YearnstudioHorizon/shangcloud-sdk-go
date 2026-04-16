@@ -110,6 +110,17 @@ func (c *Client) GenerateUserInstance(code string, state string) (User, error) {
 	// 生成user实例
 	user := &UserInstance{}
 
-	user.InitUser(tResp.AccessToken, tResp.RefreshToken, tResp.ExpiresIn, c)
+	user.InitUser(tResp.AccessToken, tResp.RefreshToken, tResp.TokenType, tResp.ExpiresIn, c)
 	return user, nil
+}
+
+func (c *Client) getUserBasicInfo(accessToken string, tokenType string) (UserBasicInfo, error) {
+	body := map[string]string{}
+	data, err := c.request("/api/user/info", body, accessToken, tokenType)
+	if err != nil {
+		return UserBasicInfo{}, err
+	}
+	var basicInfo UserBasicInfo
+	json.Unmarshal(data, &basicInfo)
+	return basicInfo, nil
 }
