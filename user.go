@@ -8,6 +8,7 @@ type User interface {
 	InitUser(string, string, string, int, *Client) // 在实例化后会被立即调用
 	Save()                                         // 在数据变更后会被调用
 	IsExpired() bool                               // 检查 Token 是否过期
+	GetBasicInfo() (UserBasicInfo, error)          // 生成UserBasicInfo结构体
 }
 
 type UserInstance struct {
