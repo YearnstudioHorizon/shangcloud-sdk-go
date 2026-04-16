@@ -47,7 +47,7 @@ func (c *Client) GenerateOAuthUrl() string {
 	params.Add("redirect_uri", c.RedirectUri)
 	params.Add("scope", c.Scope)
 
-	url := fmt.Sprintf("%s/oauth/authorize%s", c.BaseUrl, params.Encode())
+	url := fmt.Sprintf("%s/oauth/authorize?%s", c.BaseUrl, params.Encode())
 	return url
 }
 
@@ -106,7 +106,6 @@ func (c *Client) GenerateUserInstance(code string, state string) (User, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&tResp); err != nil {
 		return nil, err
 	}
-
 	// 生成user实例
 	user := &UserInstance{}
 

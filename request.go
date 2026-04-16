@@ -10,7 +10,7 @@ import (
 )
 
 // 通用的 JSON POST 请求工具函数
-func (c *Client) request(path string, body interface{}, accessToken string, tokenType string) ([]byte, error) {
+func (c *Client) request(path string, body any, accessToken string, tokenType string) ([]byte, error) {
 	// 构造完整URL
 	fullUrl := fmt.Sprintf("%s%s", c.BaseUrl, path)
 

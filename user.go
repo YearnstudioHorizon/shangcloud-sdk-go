@@ -27,6 +27,7 @@ func (user *UserInstance) Save() {}
 func (user *UserInstance) InitUser(accessToken string, refreshToken string, tokenType string, expiresIn int, client *Client) {
 	user.accessToken = accessToken
 	user.refreshToken = refreshToken
+	user.TokenType = tokenType
 	user.ExpiresIn = expiresIn
 	user.client = client
 
