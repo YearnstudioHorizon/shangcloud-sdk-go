@@ -9,6 +9,9 @@ type User interface {
 	Save()                                         // 在数据变更后会被调用
 	IsExpired() bool                               // 检查 Token 是否过期
 	GetBasicInfo() (UserBasicInfo, error)          // 生成UserBasicInfo结构体
+	GetVariable(key string) (string, error)        // 读取用户变量
+	SetVariable(key string, value string) error    // 写入用户变量
+	DeleteVariable(key string) error               // 删除用户变量
 }
 
 type UserInstance struct {
@@ -46,6 +49,23 @@ func (user *UserInstance) IsExpired() bool {
 // 获取基础信息
 func (user *UserInstance) GetBasicInfo() (UserBasicInfo, error) {
 	return user.client.getUserBasicInfo(user.accessToken, user.TokenType)
+}
+
+// 读取用户变量
+func (user *UserInstance) GetVariable(key string) (string, error) {
+	return user.client.variableAction("read", key, "", user.accessToken, user.TokenType)
+}
+
+// 写入用户变量
+func (user *UserInstance) SetVariable(key string, value string) error {
+	_, err := user.client.variableAction("write", key, value, user.accessToken, user.TokenType)
+	return err
+}
+
+// 删除用户变量
+func (user *UserInstance) DeleteVariable(key string) error {
+	_, err := user.client.variableAction("delete", key, "", user.accessToken, user.TokenType)
+	return err
 }
 
 var _ User = &UserInstance{} // 测试接口是否实现

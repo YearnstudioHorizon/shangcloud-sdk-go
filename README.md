@@ -86,10 +86,25 @@ type User interface {
     Save()
     IsExpired() bool
     GetBasicInfo() (UserBasicInfo, error)
+    GetVariable(key string) (string, error)
+    SetVariable(key, value string) error
+    DeleteVariable(key string) error
 }
 ```
 
 SDK 提供了默认的内存实现 `UserInstance`。`IsExpired` 会提前 60 秒判断过期，`GetBasicInfo` 会请求 `/api/user/info`。
+
+### 用户变量读写
+
+`GetVariable` / `SetVariable` / `DeleteVariable` 通过 `/api/varibles` 操作当前用户的变量存储，需要授权时携带 `var:io` scope。
+
+```go
+if err := user.SetVariable("theme", "dark"); err != nil {
+    // 处理错误
+}
+value, err := user.GetVariable("theme")
+_ = user.DeleteVariable("theme")
+```
 
 ### `UserBasicInfo`
 
