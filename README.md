@@ -143,6 +143,18 @@ type TempVarStorage interface {
 client.SetClientSecret("new-secret")
 ```
 
+### 动态调整 Scope
+
+默认 `Scope` 为 `user:basic`，可以通过以下方法调整 Scope 以获取更多权限（例如，需要调用 MMO 接口时需要加入 `mmo` 权限）：
+
+```go
+// 追加一个新的 Scope，如果已经存在则忽略
+client.AddScope("mmo")
+
+// 直接覆盖现有的所有 Scope
+client.SetScope("user:basic mmo var:io")
+```
+
 ## 注意事项
 
 - `Client` 与 `UserInstance` 内嵌了 `noCopy`，请始终通过指针传递，避免值拷贝导致 `sync.Map` 等内部状态出现问题。
