@@ -56,6 +56,27 @@ func (c *Client) SetClientSecret(clientSecret string) {
 	c.clientSecret = clientSecret
 }
 
+// 设置覆盖现有的Scope
+func (c *Client) SetScope(scope string) {
+	c.Scope = scope
+}
+
+// 追加新的Scope
+func (c *Client) AddScope(scope string) {
+	if c.Scope == "" {
+		c.Scope = scope
+	} else {
+		// 检查是否已经存在该scope
+		scopes := strings.Split(c.Scope, " ")
+		for _, s := range scopes {
+			if s == scope {
+				return
+			}
+		}
+		c.Scope = c.Scope + " " + scope
+	}
+}
+
 // 基于ClientId及ClientSecret生成Authorization头
 func (c *Client) generateAuthorizeHeader() string {
 	raw := fmt.Sprintf("%s:%s", c.ClientId, c.clientSecret)
